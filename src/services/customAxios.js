@@ -22,4 +22,12 @@ instance.interceptors.response.use(
     }
 );
 
+instance.interceptors.request.use(function (config) {
+    const item = JSON.parse(localStorage.getItem('persist:root'));
+    const token = item && item.token ? "Bearer " + item.token : "";
+    const newToken = token.replace('"', '');
+    config.headers.Authorization = newToken;
+    return config;
+});
+
 export default instance;

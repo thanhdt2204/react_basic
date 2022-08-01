@@ -1,9 +1,10 @@
 import React from 'react';
+import _ from 'lodash';
 
 class ListUser extends React.Component {
 
-    handleDelete = (inform) => {
-        this.props.deleteInform(inform);
+    handleChangePage = (pageNumber) => {
+        this.props.changePage(pageNumber);
     };
 
     render() {
@@ -36,24 +37,42 @@ class ListUser extends React.Component {
                         }
                     </tbody>
                 </table>
-                <div className="clearfix">
-                    <div className="hint-text">
-                        Showing&nbsp;
-                        <b>{this.props.numberOfElements}</b>&nbsp;
-                        out of&nbsp;
-                        <b>{this.props.totalElements}</b>&nbsp;
-                        entries
+                {this.props.userList.length > 0 &&
+                    <div className="clearfix">
+                        <div className="hint-text">
+                            Showing&nbsp;
+                            <b>{this.props.numberOfElements}</b>&nbsp;
+                            out of&nbsp;
+                            <b>{this.props.totalElements}</b>&nbsp;
+                            entries
+                        </div>
+                        <ul className="pagination">
+                            {this.props.currentPage == 0 &&
+                                <li className="page-item disabled"><a>Previous</a></li>
+                            }
+                            {this.props.currentPage > 0 &&
+                                <li onClick={() => this.handleChangePage(this.props.currentPage - 1)} className="page-item"><a>Previous</a></li>
+                            }
+
+                            {
+                                _.range(0, this.props.totalPages, 1).map((item, index) => {
+                                    const activeClass = this.props.currentPage == item ? 'active' : '';
+                                    return (
+                                        <li onClick={() => this.handleChangePage(item)} key={index} className={`page-item ${activeClass}`}>
+                                            <a className="page-link">{item + 1}</a>
+                                        </li>
+                                    );
+                                })
+                            }
+                            {this.props.currentPage == this.props.totalPages - 1 &&
+                                <li className="page-item disabled"><a className="page-link">Next</a></li>
+                            }
+                            {this.props.currentPage < this.props.totalPages - 1 &&
+                                <li onClick={() => this.handleChangePage(this.props.currentPage + 1)} className="page-item"><a className="page-link">Next</a></li>
+                            }
+                        </ul>
                     </div>
-                    <ul className="pagination">
-                        <li className="page-item disabled"><a href="#">Previous</a></li>
-                        <li className="page-item"><a href="#" className="page-link">1</a></li>
-                        <li className="page-item"><a href="#" className="page-link">2</a></li>
-                        <li className="page-item active"><a href="#" className="page-link">3</a></li>
-                        <li className="page-item"><a href="#" className="page-link">4</a></li>
-                        <li className="page-item"><a href="#" className="page-link">5</a></li>
-                        <li className="page-item"><a href="#" className="page-link">Next</a></li>
-                    </ul>
-                </div>
+                }
             </>
         );
     }

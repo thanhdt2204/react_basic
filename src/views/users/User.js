@@ -5,33 +5,47 @@ import DeleteUser from './DeleteUser';
 import ListUser from './ListUser';
 import userApi from '../../services/userService';
 import { withRouter } from "react-router";
-import { connect } from 'react-redux';
+import { pagination } from '../../utils/constant';
 
 class User extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
+            currentPage: 0,
             userList: [],
             numberOfElements: 0,
-            totalElements: 0
+            totalElements: 0,
+            totalPages: 0
         }
+    }
+
+    getAllUsers = async (currentPage) => {
+        let response = await userApi.getAllUsers({ page: currentPage, size: pagination.PAGE_SIZE });
+        if (response.status === 200) {
+            this.setState({
+                userList: response.data.content,
+                numberOfElements: response.data.numberOfElements,
+                totalElements: response.data.totalElements,
+                totalPages: response.data.totalPages
+            })
+        }
+    }
+
+    componentDidMount() {
+        this.getAllUsers(this.state.currentPage);
     }
 
     handleAddNew = () => {
         this.props.history.push("/user/new");
     }
 
-    async componentDidMount() {
-        let response = await userApi.getAllUsers(this.props.token);
-        console.log("Data: ", response);
-        if (response.status === 200) {
-            this.setState({
-                userList: response.data.content,
-                numberOfElements: response.data.numberOfElements,
-                totalElements: response.data.totalElements
-            })
-        }
+    changePage = (pageNumber) => {
+        console.log("Current page: ", this.state.currentPage + 1);
+        this.setState({
+            currentPage: pageNumber
+        })
+        this.getAllUsers(pageNumber);
     }
 
     render() {
@@ -53,7 +67,8 @@ class User extends React.Component {
                             </div>
                         </div>
                         <ListUser userList={this.state.userList} numberOfElements={this.state.numberOfElements}
-                            totalElements={this.state.totalElements} />
+                            totalElements={this.state.totalElements} totalPages={this.state.totalPages}
+                            currentPage={this.state.currentPage} changePage={this.changePage} />
                     </div>
                 </div>
                 <UpdateUser />
@@ -64,8 +79,4 @@ class User extends React.Component {
 
 }
 
-const mapStateReduxToPropsOfUser = (state) => {
-    return { token: state.token }
-}
-
-export default connect(mapStateReduxToPropsOfUser, null)(withRouter(User));
+export default withRouter(User);

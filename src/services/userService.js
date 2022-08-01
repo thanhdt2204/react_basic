@@ -5,12 +5,8 @@ const userApi = {
         return axios.post('/login', data);
     },
 
-    getAllUsers: (token) => {
-        return axios.get('/users', {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
+    getAllUsers: (data) => {
+        return axios.get('/users', { params: data });
     }
 }
 
