@@ -6,6 +6,7 @@ import ListUser from './ListUser';
 import userApi from '../../services/userService';
 import { withRouter } from "react-router";
 import { pagination } from '../../utils/constant';
+import { ToastContainer, toast } from 'react-toastify';
 
 class User extends React.Component {
 
@@ -73,6 +74,7 @@ class User extends React.Component {
                 </div>
                 <UpdateUser />
                 <DeleteUser />
+                <ToastContainer />
             </>
         );
     }

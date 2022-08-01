@@ -1,32 +1,43 @@
 import React from 'react';
 import { Link } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
+import { withRouter } from "react-router";
+import { message } from '../../utils/constant';
+import userApi from '../../services/userService';
 
 class AddUser extends React.Component {
 
-    state = {
-        name: '',
-        age: ''
+    constructor(props) {
+        super(props);
+        this.state = {
+            email: null,
+            firstName: null,
+            lastName: null
+        }
     }
 
-    handleChangeName = (e) => {
+    handleChangeInput = (e, key) => {
+        let copyState = { ...this.state };
+        copyState[key] = e.target.value;
         this.setState({
-            name: e.target.value
+            ...copyState
         });
     };
 
-    handleChangeAge = (e) => {
-        this.setState({
-            age: e.target.value
-        });
-    };
-
-    handleAdd = (e) => {
+    handleAdd = async (e) => {
         e.preventDefault();
-        this.props.addInform({
-            id: Math.floor(Math.random() * 1000),
-            name: this.state.name,
-            age: this.state.age
+        await userApi.saveUser({
+            email: this.state.email,
+            firstName: this.state.firstName,
+            lastName: this.state.lastName
+        }).then((response) => {
+            if (response.status === 500) {
+                toast.error(message.INTERNAL_SERVER_ERROR);
+            } else if (response.status === 400) {
+                toast.warn(response.status + ': ' + response.message);
+            } else {
+                this.props.history.push("/user");
+            }
         });
     };
 
@@ -39,21 +50,24 @@ class AddUser extends React.Component {
                         <form >
                             <div className="form-group">
                                 <label>Email</label>
-                                <input type="email" className="form-control" required />
+                                <input onChange={(e) => this.handleChangeInput(e, 'email')} value={this.state.email}
+                                    type="email" className="form-control" required />
                             </div>
 
                             <div className="form-group">
                                 <label>First Name</label>
-                                <input type="text" className="form-control" required />
+                                <input onChange={(e) => this.handleChangeInput(e, 'firstName')} value={this.state.firstName}
+                                    type="text" className="form-control" required />
                             </div>
 
                             <div className="form-group">
                                 <label>Last Name</label>
-                                <input type="text" className="form-control" required />
+                                <input onChange={(e) => this.handleChangeInput(e, 'lastName')} value={this.state.lastName}
+                                    type="text" className="form-control" required />
                             </div>
 
                             <Link to="/user" className='btn btn-default'>Cancel</Link>&nbsp;
-                            <input className='btn btn-success' type="submit" value="Submit" />
+                            <input onClick={(e) => this.handleAdd(e)} className='btn btn-success' type="submit" value="Submit" />
                         </form>
 
                     </div>
@@ -65,4 +79,4 @@ class AddUser extends React.Component {
 
 }
 
-export default AddUser;
+export default withRouter(AddUser);

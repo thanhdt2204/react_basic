@@ -4,5 +4,10 @@ export const actionType = {
 }
 
 export const pagination = {
-    PAGE_SIZE: 2,
+    PAGE_SIZE: 5,
+}
+
+export const message = {
+    SAVE_USER_SUCCESSFULLY: 'SAVE_USER_SUCCESSFULLY',
+    INTERNAL_SERVER_ERROR: 'INTERNAL_SERVER_ERROR',
 }

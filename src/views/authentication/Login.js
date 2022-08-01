@@ -5,6 +5,7 @@ import userApi from '../../services/userService';
 import './Login.scss';
 import userAction from '../../store/actions/userAction';
 import { withRouter } from "react-router";
+import { message } from '../../utils/constant';
 
 class Login extends React.Component {
 
@@ -33,7 +34,7 @@ class Login extends React.Component {
         await userApi.login({ email: this.state.email, password: this.state.password })
             .then((response) => {
                 if (response.status === 500) {
-                    toast.error("Internal Server Error");
+                    toast.error(message.INTERNAL_SERVER_ERROR);
                 } else if (response.status === 400) {
                     toast.warn(response.status + ': ' + response.message);
                 } else {
