@@ -7,6 +7,7 @@ import userApi from '../../services/userService';
 import { withRouter } from "react-router";
 import { pagination } from '../../utils/constant';
 import { ToastContainer, toast } from 'react-toastify';
+import { message } from '../../utils/constant';
 
 class User extends React.Component {
 
@@ -17,7 +18,9 @@ class User extends React.Component {
             userList: [],
             numberOfElements: 0,
             totalElements: 0,
-            totalPages: 0
+            totalPages: 0,
+            email: '',
+            isOpenModal: false
         }
     }
 
@@ -41,12 +44,35 @@ class User extends React.Component {
         this.props.history.push("/user/new");
     }
 
-    changePage = (pageNumber) => {
-        console.log("Current page: ", this.state.currentPage + 1);
+    f_changePage = (pageNumber) => {
         this.setState({
             currentPage: pageNumber
         })
         this.getAllUsers(pageNumber);
+    }
+
+    f_buttonDelete = (email) => {
+        this.setState({
+            email: email,
+            isOpenModal: true
+        })
+    }
+
+    f_delete = async () => {
+        await userApi.deleteUser(this.state.email).then((response) => {
+            if (response.status === 500) {
+                toast.error(message.INTERNAL_SERVER_ERROR);
+            } else if (response.status === 400) {
+                toast.warn(response.status + ': ' + response.message);
+            } else {
+                this.setState({
+                    isOpenModal: false,
+                    currentPage: 0
+                })
+                this.getAllUsers(this.state.currentPage);
+                toast.success(message.DELETE_USER_SUCCESSFULLY);
+            }
+        });
     }
 
     render() {
@@ -60,7 +86,7 @@ class User extends React.Component {
                                     <h2>User Management</h2>
                                 </div>
                                 <div className="col-sm-6">
-                                    <a onClick={this.handleAddNew} className="btn btn-success">
+                                    <a href='# ' onClick={this.handleAddNew} className="btn btn-success">
                                         <i className="material-icons">&#xE147;</i>
                                         <span>Add New</span>
                                     </a>
@@ -69,11 +95,13 @@ class User extends React.Component {
                         </div>
                         <ListUser userList={this.state.userList} numberOfElements={this.state.numberOfElements}
                             totalElements={this.state.totalElements} totalPages={this.state.totalPages}
-                            currentPage={this.state.currentPage} changePage={this.changePage} />
+                            currentPage={this.state.currentPage} f_changePage={this.f_changePage}
+                            f_buttonDelete={this.f_buttonDelete} />
                     </div>
                 </div>
                 <UpdateUser />
-                <DeleteUser />
+                <DeleteUser email={this.state.email} isOpenModal={this.state.isOpenModal}
+                    f_delete={this.f_delete} />
                 <ToastContainer />
             </>
         );

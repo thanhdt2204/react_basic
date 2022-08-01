@@ -12,6 +12,10 @@ const userApi = {
 
     saveUser: (data) => {
         return axios.post('/user', data);
+    },
+
+    deleteUser: (email) => {
+        return axios.delete(`/user/${email}`);
     }
 
 }

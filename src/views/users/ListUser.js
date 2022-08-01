@@ -4,7 +4,11 @@ import _ from 'lodash';
 class ListUser extends React.Component {
 
     handleChangePage = (pageNumber) => {
-        this.props.changePage(pageNumber);
+        this.props.f_changePage(pageNumber);
+    };
+
+    handleButtonDelete = (email) => {
+        this.props.f_buttonDelete(email);
     };
 
     render() {
@@ -28,8 +32,12 @@ class ListUser extends React.Component {
                                         <td>{item.firstName}</td>
                                         <td>{item.lastName}</td>
                                         <td>
-                                            <a href="#editEmployeeModal" className="edit" data-toggle="modal"><i className="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
-                                            <a href="#deleteEmployeeModal" className="delete" data-toggle="modal"><i className="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
+                                            <a href="#editEmployeeModal" className="edit" data-toggle="modal">
+                                                <i className="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i>
+                                            </a>
+                                            <a href='#deleteEmployeeModal' onClick={() => this.handleButtonDelete(item.email)} className="delete" data-toggle="modal">
+                                                <i className="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i>
+                                            </a>
                                         </td>
                                     </tr>
                                 )
@@ -47,28 +55,36 @@ class ListUser extends React.Component {
                             entries
                         </div>
                         <ul className="pagination">
-                            {this.props.currentPage == 0 &&
-                                <li className="page-item disabled"><a>Previous</a></li>
+                            {this.props.currentPage === 0 &&
+                                <li className="page-item disabled">
+                                    <a href='# '>Previous</a>
+                                </li>
                             }
                             {this.props.currentPage > 0 &&
-                                <li onClick={() => this.handleChangePage(this.props.currentPage - 1)} className="page-item"><a>Previous</a></li>
+                                <li onClick={() => this.handleChangePage(this.props.currentPage - 1)} className="page-item">
+                                    <a href='# '>Previous</a>
+                                </li>
                             }
 
                             {
                                 _.range(0, this.props.totalPages, 1).map((item, index) => {
-                                    const activeClass = this.props.currentPage == item ? 'active' : '';
+                                    const activeClass = this.props.currentPage === item ? 'active' : '';
                                     return (
                                         <li onClick={() => this.handleChangePage(item)} key={index} className={`page-item ${activeClass}`}>
-                                            <a className="page-link">{item + 1}</a>
+                                            <a href='# ' className="page-link">{item + 1}</a>
                                         </li>
                                     );
                                 })
                             }
-                            {this.props.currentPage == this.props.totalPages - 1 &&
-                                <li className="page-item disabled"><a className="page-link">Next</a></li>
+                            {this.props.currentPage === this.props.totalPages - 1 &&
+                                <li className="page-item disabled">
+                                    <a href='# ' className="page-link">Next</a>
+                                </li>
                             }
                             {this.props.currentPage < this.props.totalPages - 1 &&
-                                <li onClick={() => this.handleChangePage(this.props.currentPage + 1)} className="page-item"><a className="page-link">Next</a></li>
+                                <li onClick={() => this.handleChangePage(this.props.currentPage + 1)} className="page-item">
+                                    <a href='# ' className="page-link">Next</a>
+                                </li>
                             }
                         </ul>
                     </div>

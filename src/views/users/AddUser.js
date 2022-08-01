@@ -10,9 +10,9 @@ class AddUser extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            email: null,
-            firstName: null,
-            lastName: null
+            email: '',
+            firstName: '',
+            lastName: ''
         }
     }
 

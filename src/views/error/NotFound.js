@@ -11,7 +11,7 @@ class NotFound extends React.Component {
         return (
             <div style={{ color: "white", textAlign: "center", marginTop: "260px", fontWeight: "bold" }}>
                 <div>Page not found</div>
-                <a onClick={this.handleToHome}>Back to home page</a>
+                <a href='# ' onClick={this.handleToHome}>Back to home page</a>
             </div>
         );
     }
