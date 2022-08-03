@@ -11,6 +11,10 @@ class ListUser extends React.Component {
         this.props.f_buttonDelete(email);
     };
 
+    handleButtonUpdate = (email) => {
+        this.props.f_buttonUpdate(email);
+    };
+
     render() {
         return (
             <>
@@ -32,10 +36,10 @@ class ListUser extends React.Component {
                                         <td>{item.firstName}</td>
                                         <td>{item.lastName}</td>
                                         <td>
-                                            <a href="#editEmployeeModal" className="edit" data-toggle="modal">
+                                            <a href="#editUserModal" onClick={() => this.handleButtonUpdate(item.email)} className="edit" data-toggle="modal">
                                                 <i className="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i>
                                             </a>
-                                            <a href='#deleteEmployeeModal' onClick={() => this.handleButtonDelete(item.email)} className="delete" data-toggle="modal">
+                                            <a href='#deleteUserModal' onClick={() => this.handleButtonDelete(item.email)} className="delete" data-toggle="modal">
                                                 <i className="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i>
                                             </a>
                                         </td>

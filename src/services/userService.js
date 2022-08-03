@@ -16,7 +16,15 @@ const userApi = {
 
     deleteUser: (email) => {
         return axios.delete(`/user/${email}`);
-    }
+    },
+
+    updateUser: (data) => {
+        return axios.put('/user', data);
+    },
+
+    getUser: (email) => {
+        return axios.get(`/user/${email}`);
+    },
 
 }
 

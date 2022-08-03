@@ -16,11 +16,12 @@ class User extends React.Component {
         this.state = {
             currentPage: 0,
             userList: [],
+            user: {},
             numberOfElements: 0,
             totalElements: 0,
             totalPages: 0,
             email: '',
-            isOpenModal: false
+            isOpenUpdateModal: false
         }
     }
 
@@ -54,7 +55,6 @@ class User extends React.Component {
     f_buttonDelete = (email) => {
         this.setState({
             email: email,
-            isOpenModal: true
         })
     }
 
@@ -66,11 +66,34 @@ class User extends React.Component {
                 toast.warn(response.status + ': ' + response.message);
             } else {
                 this.setState({
-                    isOpenModal: false,
                     currentPage: 0
                 })
                 this.getAllUsers(this.state.currentPage);
                 toast.success(message.DELETE_USER_SUCCESSFULLY);
+            }
+        });
+    }
+
+    f_buttonUpdate = (email) => {
+        this.setState({
+            email: email,
+            isOpenUpdateModal: true
+        })
+    }
+
+    f_update = async (user) => {
+        await userApi.updateUser(user).then((response) => {
+            if (response.status === 500) {
+                toast.error(message.INTERNAL_SERVER_ERROR);
+            } else if (response.status === 400) {
+                toast.warn(response.status + ': ' + response.message);
+            } else {
+                this.setState({
+                    isOpenUpdateModal: false,
+                    currentPage: 0
+                })
+                this.getAllUsers(this.state.currentPage);
+                toast.success(message.UPDATE_USER_SUCCESSFULLY);
             }
         });
     }
@@ -96,12 +119,13 @@ class User extends React.Component {
                         <ListUser userList={this.state.userList} numberOfElements={this.state.numberOfElements}
                             totalElements={this.state.totalElements} totalPages={this.state.totalPages}
                             currentPage={this.state.currentPage} f_changePage={this.f_changePage}
-                            f_buttonDelete={this.f_buttonDelete} />
+                            f_buttonDelete={this.f_buttonDelete} f_buttonUpdate={this.f_buttonUpdate} />
                     </div>
                 </div>
-                <UpdateUser />
-                <DeleteUser email={this.state.email} isOpenModal={this.state.isOpenModal}
-                    f_delete={this.f_delete} />
+                {this.state.isOpenUpdateModal &&
+                    <UpdateUser email={this.state.email} f_update={this.f_update} />
+                }
+                <DeleteUser email={this.state.email} f_delete={this.f_delete} />
                 <ToastContainer />
             </>
         );
