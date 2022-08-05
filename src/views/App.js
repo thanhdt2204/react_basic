@@ -19,16 +19,16 @@ class App extends React.Component {
     return (
       <BrowserRouter>
         {this.props.isLoggedIn && <Header />}
-        < Switch >
-          <UserContextProvider>
+        <UserContextProvider>
+          < Switch >
             <Route path="/" exact component={Home} />
             <Route path="/about" component={userIsAuthenticated(About)} />
             <Route path="/user" exact component={userIsAuthenticated(User)} />
             <Route path="/user/new" component={userIsAuthenticated(AddUser)} />
             <Route path="/login" component={userIsNotAuthenticated(Login)} />
             <Route path="*" component={NotFound} />
-          </UserContextProvider>
-        </Switch >
+          </Switch >
+        </UserContextProvider>
       </BrowserRouter >
     );
   }
