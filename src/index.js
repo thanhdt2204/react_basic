@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import 'react-toastify/dist/ReactToastify.css';
 import { PersistGate } from 'redux-persist/integration/react';
-import reduxStore, { persistor } from './redux';
+import reduxStore, { persistor } from './store/redux';
 import reportWebVitals from './reportWebVitals';
 import './styles/global.scss';
 import App from './views/App';
