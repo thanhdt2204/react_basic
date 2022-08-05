@@ -1,9 +1,10 @@
 import React from 'react';
-import { Link } from "react-router-dom";
-import { ToastContainer, toast } from 'react-toastify';
 import { withRouter } from "react-router";
-import { message } from '../../utils/constant';
+import { Link } from "react-router-dom";
+import { toast, ToastContainer } from 'react-toastify';
+import UserContext from "../../context/UserContext";
 import userApi from '../../services/userService';
+import { message } from '../../utils/constant';
 
 class AddUser extends React.Component {
 
@@ -36,6 +37,7 @@ class AddUser extends React.Component {
             } else if (response.status === 400) {
                 toast.warn(response.status + ': ' + response.message);
             } else {
+                this.context.setSaveSuccess(true);
                 this.props.history.push("/user");
             }
         });
@@ -78,5 +80,7 @@ class AddUser extends React.Component {
     }
 
 }
+
+AddUser.contextType = UserContext;
 
 export default withRouter(AddUser);

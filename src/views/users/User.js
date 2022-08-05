@@ -1,13 +1,13 @@
 import React from 'react';
-import './User.scss';
-import UpdateUser from './UpdateUser';
+import { withRouter } from "react-router";
+import { toast, ToastContainer } from 'react-toastify';
+import UserContext from "../../context/UserContext";
+import userApi from '../../services/userService';
+import { message, pagination } from '../../utils/constant';
 import DeleteUser from './DeleteUser';
 import ListUser from './ListUser';
-import userApi from '../../services/userService';
-import { withRouter } from "react-router";
-import { pagination } from '../../utils/constant';
-import { ToastContainer, toast } from 'react-toastify';
-import { message } from '../../utils/constant';
+import UpdateUser from './UpdateUser';
+import './User.scss';
 
 class User extends React.Component {
 
@@ -39,6 +39,13 @@ class User extends React.Component {
 
     componentDidMount() {
         this.getAllUsers(this.state.currentPage);
+    }
+
+    componentDidUpdate() {
+        if (this.context.state.isSaveSuccess) {
+            toast.success(message.SAVE_USER_SUCCESSFULLY);
+            this.context.setSaveSuccess(false);
+        }
     }
 
     handleAddNew = () => {
@@ -132,5 +139,7 @@ class User extends React.Component {
     }
 
 }
+
+User.contextType = UserContext;
 
 export default withRouter(User);

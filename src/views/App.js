@@ -10,6 +10,7 @@ import Home from './home/Home';
 import AddUser from './users/AddUser';
 import User from './users/User';
 import { userIsAuthenticated, userIsNotAuthenticated } from '../auth';
+import UserContextProvider from '../context/UserContextProvider';
 
 class App extends React.Component {
 
@@ -19,12 +20,14 @@ class App extends React.Component {
       <BrowserRouter>
         {this.props.isLoggedIn && <Header />}
         < Switch >
-          <Route path="/" exact component={Home} />
-          <Route path="/about" component={userIsAuthenticated(About)} />
-          <Route path="/user" exact component={userIsAuthenticated(User)} />
-          <Route path="/user/new" component={userIsAuthenticated(AddUser)} />
-          <Route path="/login" component={userIsNotAuthenticated(Login)} />
-          <Route path="*" component={NotFound} />
+          <UserContextProvider>
+            <Route path="/" exact component={Home} />
+            <Route path="/about" component={userIsAuthenticated(About)} />
+            <Route path="/user" exact component={userIsAuthenticated(User)} />
+            <Route path="/user/new" component={userIsAuthenticated(AddUser)} />
+            <Route path="/login" component={userIsNotAuthenticated(Login)} />
+            <Route path="*" component={NotFound} />
+          </UserContextProvider>
         </Switch >
       </BrowserRouter >
     );
